@@ -89,6 +89,9 @@ describe(`11 - Finalize a compra vendo um resumo dela, preenchendo os seus dados
 
     await act(async () => {
       userEvent.click(await screen.findByTestId('master-payment'));
+    });
+
+    await act(async () => {
       userEvent.click(await screen.findByTestId('checkout-btn'));
     });
 
