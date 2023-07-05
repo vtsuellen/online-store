@@ -1,6 +1,8 @@
 import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
+import Home from './pages/home';
 
 function App() {
   return (
@@ -17,6 +19,10 @@ function App() {
           Learn React
         </a>
       </header>
+      <Routes>
+        {/* Renderização do requesito 2 */}
+        <Route path="/" element={ <Home /> } />
+      </Routes>
     </div>
   );
 }
