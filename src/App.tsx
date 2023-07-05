@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 import Home from './pages/home';
+import Carrinho from './pages/Carrinho';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         {/* Renderização do requesito 2 */}
         <Route path="/" element={ <Home /> } />
+        <Route path="/carrinho" element={ <Carrinho /> } />
       </Routes>
     </div>
   );
