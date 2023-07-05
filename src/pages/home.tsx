@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
   const [list, setList] = useState([]);
@@ -15,6 +16,11 @@ function Home() {
               Digite algum termo de pesquisa ou escolha uma categoria.
             </h1>) : <p>Aqui vai a listagem de produtos</p>}
       </div>
+
+      {/* Botão do carrinho de compras */}
+      <Link to="/carrinho" data-testid="shopping-cart-button">
+        <img src="./src/img/carrinho.png" alt="Carrinho de Compras" />
+      </Link>
     </>
   );
 }
