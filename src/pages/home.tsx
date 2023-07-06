@@ -33,11 +33,17 @@ function Home() {
 
   // função responsável por chamar a api ao clicar no botão buscar utilizando a info digitada no campo search
   const searchHandleClick = async () => {
-    const data = await api.getProductsFromCategoryAndQuery(selectedCategory, searchValue);
-    setProducts(data.results);
-    if (data.results.length === 0) setHomeMessage('Nenhum produto foi encontrado');
+    const dt = await api.getProductsFromCategoryAndQuery(selectedCategory, searchValue);
+    setProducts(dt.results);
+    if (dt.results.length === 0) setHomeMessage('Nenhum produto foi encontrado');
     setSearchValue('');
   };
+  const handleCategoriesClick = async (categoriesId: string) => {
+    setSelectedCategory(categoriesId);
+  };
+  useEffect(() => {
+    if (selectedCategory !== '') { searchHandleClick(); }
+  }, [selectedCategory]);
 
   return (
     <>
@@ -81,6 +87,7 @@ function Home() {
             name={ element.title }
             img={ element.thumbnail }
             price={ element.price }
+
           />))
         )}
       </div>
@@ -91,6 +98,7 @@ function Home() {
             <button
               data-testid="category"
               key={ category.id }
+              onClick={ () => handleCategoriesClick(category.id) }
             >
               {category.name}
             </button>
