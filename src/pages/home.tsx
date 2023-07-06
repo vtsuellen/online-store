@@ -1,14 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import ProductCard from '../components/productCard';
+import Styles from './home.module.css';
+
+// Tipagem do objeto da lista de produtos, utilizando so as propriedades necessarias até agora
+type ProductsProps = {
+  title: string,
+  price: number,
+  thumbnail: string,
+};
+
+const HOME_MSG = 'Digite algum termo de pesquisa ou escolha uma categoria.';
 
 function Home() {
-  const [products, setProducts] = useState([]);
+  const [homeMessage, setHomeMessage] = useState(HOME_MSG);
+  const [products, setProducts] = useState<ProductsProps[]>([]);
   const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+  // não foi necessario utilizar categoria ainda, mas como a função da api solicita, ja implementei
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const getCategories = async () => {
-    const categorie = await api.getCategories();
-    setCategories(categorie);
+    const category = await api.getCategories();
+    setCategories(category);
   };
 
   // vai chamar a funcão da API e realizar uma vez
@@ -16,11 +31,33 @@ function Home() {
     getCategories();
   }, []);
 
+  // função responsável por chamar a api ao clicar no botão buscar utilizando a info digitada no campo search
+  const searchHandleClick = async () => {
+    const data = await api.getProductsFromCategoryAndQuery(selectedCategory, searchValue);
+    setProducts(data.results);
+    if (data.results.length === 0) setHomeMessage('Nenhum produto foi encontrado');
+    setSearchValue('');
+  };
+
   return (
     <>
       <div>
         {/* Campo de busca */}
-        <input type="text" placeholder="Buscar" />
+        <input
+          type="text"
+          placeholder="Buscar"
+          data-testid="query-input"
+          value={ searchValue }
+          onChange={ ({ target }) => setSearchValue(target.value) }
+        />
+
+        {/* Botão responsável por acionar a função que chama a api de busca */}
+        <button
+          data-testid="query-button"
+          onClick={ () => searchHandleClick() }
+        >
+          buscar
+        </button>
 
         {/* Botão do carrinho de compras */}
         <Link to="/carrinho" data-testid="shopping-cart-button">
@@ -31,24 +68,31 @@ function Home() {
       </div>
 
       {/* Quando a lista estiver vazia, a página deverá mostrar a mensagem "Digite algum termo de pesquisa ou escolha uma categoria." */}
-      <div>
+      {/* Quando for feita uma busca sem resultado ira retornar a mensagem "nenhum produto encontrado" atraves do useState homeMessage */}
+      {/* Quando houver uma busca bem sucedida retornara um .map do componente productCard listando os produtos */}
+      <div className={ Styles.container }>
         {products.length === 0 ? (
           <h1 data-testid="home-initial-message">
-            Digite algum termo de pesquisa ou escolha uma categoria.
+            {homeMessage}
           </h1>
         ) : (
-          <p>Aqui vai a listagem de produtos</p>
+          products.map((element, index) => (<ProductCard
+            key={ index }
+            name={ element.title }
+            img={ element.thumbnail }
+            price={ element.price }
+          />))
         )}
       </div>
 
       <aside>
         {categories.length > 0 && categories
-          .map((categorie) => (
+          .map((category) => (
             <button
               data-testid="category"
-              key={ categorie.id }
+              key={ category.id }
             >
-              {categorie.name}
+              {category.name}
             </button>
           ))}
       </aside>
