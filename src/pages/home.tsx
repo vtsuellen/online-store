@@ -38,6 +38,7 @@ function Home() {
     if (dt.results.length === 0) setHomeMessage('Nenhum produto foi encontrado');
     setSearchValue('');
   };
+
   const handleCategoriesClick = async (categoriesId: string) => {
     setSelectedCategory(categoriesId);
   };
@@ -82,13 +83,20 @@ function Home() {
             {homeMessage}
           </h1>
         ) : (
-          products.map((element, index) => (<ProductCard
-            key={ index }
-            name={ element.title }
-            img={ element.thumbnail }
-            price={ element.price }
-
-          />))
+          products.map((element, index) => (
+            <Link
+              data-testid="product-detail-link"
+              to={ `/${element.id}` }
+              key={ element.id }
+            >
+              <ProductCard
+                key={ index }
+                name={ element.title }
+                img={ element.thumbnail }
+                price={ element.price }
+              />
+            </Link>
+          ))
         )}
       </div>
 
