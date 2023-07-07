@@ -9,7 +9,8 @@ export type ProductsProps = {
   title: string,
   price: number,
   thumbnail: string,
-  id: number
+  id: string,
+  qty: number,
 };
 
 const HOME_MSG = 'Digite algum termo de pesquisa ou escolha uma categoria.';
@@ -55,6 +56,7 @@ function Home() {
       thumbnail: element.thumbnail,
       price: element.price,
       id: element.id,
+      qty: 1,
     };
     /* mescla itens do carrinho com o novo */
     const listCartLocalStorage = [...listCart, newObject];
