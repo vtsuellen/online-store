@@ -87,7 +87,11 @@ function Carrinho() {
                 >
                   -
                 </button>
-                <span data-testid="shopping-cart-product-quantity">{element.qty}</span>
+                <span
+                  data-testid="shopping-cart-product-quantity"
+                >
+                  {element.qty ? element.qty : 1}
+                </span>
                 <button
                   onClick={ () => increaseHandleClick(element) }
                   data-testid="product-increase-quantity"
