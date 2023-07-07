@@ -5,10 +5,11 @@ import ProductCard from '../components/productCard';
 import Styles from './home.module.css';
 
 // Tipagem do objeto da lista de produtos, utilizando so as propriedades necessarias até agora
-type ProductsProps = {
+export type ProductsProps = {
   title: string,
   price: number,
   thumbnail: string,
+  id: number
 };
 
 const HOME_MSG = 'Digite algum termo de pesquisa ou escolha uma categoria.';
@@ -20,7 +21,7 @@ function Home() {
   const [searchValue, setSearchValue] = useState('');
   // não foi necessario utilizar categoria ainda, mas como a função da api solicita, ja implementei
   const [selectedCategory, setSelectedCategory] = useState('');
-
+  const [listCart, setListCart] = useState<ProductsProps[]>([]);
   const getCategories = async () => {
     const category = await api.getCategories();
     setCategories(category);
@@ -42,9 +43,24 @@ function Home() {
   const handleCategoriesClick = async (categoriesId: string) => {
     setSelectedCategory(categoriesId);
   };
+
   useEffect(() => {
     if (selectedCategory !== '') { searchHandleClick(); }
   }, [selectedCategory]);
+
+  /* função que adiciona ao localStorage */
+  const handleAddCart = async (element: ProductsProps) => {
+    const newObject = {
+      title: element.title,
+      thumbnail: element.thumbnail,
+      price: element.price,
+      id: element.id,
+    };
+    /* mescla itens do carrinho com o novo */
+    const listCartLocalStorage = [...listCart, newObject];
+    setListCart((anterior) => [...anterior, newObject]);
+    localStorage.setItem('dataCart', JSON.stringify(listCartLocalStorage));
+  };
 
   return (
     <>
@@ -84,18 +100,26 @@ function Home() {
           </h1>
         ) : (
           products.map((element, index) => (
-            <Link
-              data-testid="product-detail-link"
-              to={ `/${element.id}` }
-              key={ element.id }
-            >
-              <ProductCard
-                key={ index }
-                name={ element.title }
-                img={ element.thumbnail }
-                price={ element.price }
-              />
-            </Link>
+            <div key={ element.id }>
+              <Link
+                data-testid="product-detail-link"
+                to={ `/${element.id}` }
+                key={ element.id }
+              >
+                <ProductCard
+                  key={ index }
+                  name={ element.title }
+                  img={ element.thumbnail }
+                  price={ element.price }
+                />
+              </Link>
+              <button
+                data-testid="product-add-to-cart"
+                onClick={ () => handleAddCart(element) }
+              >
+                add to card
+              </button>
+            </div>
           ))
         )}
       </div>
