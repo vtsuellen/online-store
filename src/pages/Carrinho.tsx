@@ -105,6 +105,12 @@ function Carrinho() {
       )}
 
       {/* Botão para voltar à página inicial */}
+      <Link
+        data-testid="checkout-products"
+        to="/checkout"
+      >
+        finalizar carrinho
+      </Link>
       <Link to="/">Voltar à página inicial</Link>
     </div>
   );
