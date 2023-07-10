@@ -47,9 +47,8 @@ function DetalhesProduto() {
     localStorage.setItem('dataCart', JSON.stringify(listCartLocalStorage));
   };
 
-
   // Enquanto não houver um produto vinculado ao estado ele retorna um loading na tela
-  if (!product) return <h1>Loading...</h1>
+  if (!product) return <h1>Loading...</h1>;
 
   return (
     <div>
@@ -60,7 +59,7 @@ function DetalhesProduto() {
       </p>
       <img
         data-testid="product-detail-image"
-        src={product.thumbnail}
+        src={ product.thumbnail }
         alt=""
       />
       <p data-testid="product-detail-price">
@@ -72,7 +71,7 @@ function DetalhesProduto() {
       </Link>
       <button
         data-testid="product-detail-add-to-cart"
-        onClick={() => handleAddCart(product)}
+        onClick={ () => handleAddCart(product) }
       >
         Adicionar ao Carrinho
       </button>
