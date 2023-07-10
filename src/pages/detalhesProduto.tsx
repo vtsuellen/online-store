@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import { ProductsProps } from './home';
+import Reviews from '../components/reviews';
 
 function DetalhesProduto() {
   const { id } = useParams();
@@ -75,6 +76,9 @@ function DetalhesProduto() {
       >
         Adicionar ao Carrinho
       </button>
+      <Reviews
+        productId={ id ?? '' }
+      />
     </div>
   );
 }
