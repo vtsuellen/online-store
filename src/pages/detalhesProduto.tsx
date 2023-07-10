@@ -5,13 +5,15 @@ import { ProductsProps } from './home';
 
 function DetalhesProduto() {
   const { id } = useParams();
-  const [product, setProduct] = useState<ProductsProps>({});
+  const [product, setProduct] = useState<ProductsProps>();
   const [listCart, setListCart] = useState<ProductsProps[]>([]);
   const [itensCart, setItemsCart] = useState<ProductsProps[]>([]);
 
   const productById = async () => {
-    const dataProduct = await api.getProductById(id);
-    setProduct(dataProduct);
+    if (id) {
+      const dataProduct = await api.getProductById(id);
+      setProduct(dataProduct);
+    }
   };
 
   useEffect(() => {
@@ -37,6 +39,7 @@ function DetalhesProduto() {
       thumbnail: element.thumbnail,
       price: element.price,
       id: element.id,
+      qty: 1,
     };
     /* mescla itens do carrinho com o novo */
     const listCartLocalStorage = [...listCart, newObject];
@@ -44,16 +47,20 @@ function DetalhesProduto() {
     localStorage.setItem('dataCart', JSON.stringify(listCartLocalStorage));
   };
 
+
+  // Enquanto não houver um produto vinculado ao estado ele retorna um loading na tela
+  if (!product) return <h1>Loading...</h1>
+
   return (
     <div>
       <h1>Detalhes do produto</h1>
       <p data-testid="product-detail-name">
         Nome:
-        { product.title }
+        {product.title}
       </p>
       <img
         data-testid="product-detail-image"
-        src={ product.thumbnail }
+        src={product.thumbnail}
         alt=""
       />
       <p data-testid="product-detail-price">
@@ -65,7 +72,7 @@ function DetalhesProduto() {
       </Link>
       <button
         data-testid="product-detail-add-to-cart"
-        onClick={ () => handleAddCart(product) }
+        onClick={() => handleAddCart(product)}
       >
         Adicionar ao Carrinho
       </button>
